@@ -4,7 +4,7 @@ Research to answer two questions:
 1. Can **Jev** (TypeSafe AI) be replicated locally, without an API key?
 2. How well does it work, and how would it apply in production?
 
-**Short answer: yes.** Jev's decision mechanism can be reproduced with any LLM that exposes `logprobs`. The best-known open-source library, **SemIf**, adds nothing over reading the logprobs directly. The best local result was **Qwen3.5-9B: 94% accuracy with good calibration, ~1 s per decision**.
+**Short answer: yes.** Jev's "trick" can be reproduced with any LLM that exposes `logprobs`. The best-known open-source library, **SemIf**, adds nothing over reading the logprobs directly. The best local result was **Qwen3.5-9B: 94% accuracy with good calibration, ~1 s per decision**.
 
 ---
 
@@ -16,7 +16,7 @@ Research to answer two questions:
 - Built for the **small decisions inside an agent**: routing, classification, approve/reject, judging evidence.
 - Intended pattern: *the LLM writes, Jev decides, code acts*.
 
-## 2. Mechanism
+## 2. The trick
 
 Before emitting each token, an LLM computes a probability distribution over its whole vocabulary. If the options are labeled with letters (A, B, C) and the model is told "answer with only the letter", **the probability of A, B and C at the first position is the decision**.
 
@@ -72,7 +72,7 @@ Hardware: Apple Silicon MacBook with 16 GB of RAM.
 **ECE** (calibration): when the model says "90% sure", is it right ~90% of the time? Lower is better.
 
 ### Takeaways
-1. **SemIf adds nothing over raw logprobs.** With the same 4B model it scored the same or slightly lower. The value is in the mechanism, not the library.
+1. **SemIf adds nothing over raw logprobs.** With the same 4B model it scored the same or slightly lower. The value is in the trick, not the library.
 2. **Model size is the dominant factor:** accuracy rises from 83% to 94% going from 4B to 9B.
 3. **gpt-5.4-nano** matches the 4B on accuracy but is more overconfident. With a 0.99 threshold it handles ~60% of cases at 96.5% accuracy, at negligible cost.
 4. SemIf reproduces its own published number (0.813 on authored144).
