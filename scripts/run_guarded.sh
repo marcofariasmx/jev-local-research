@@ -1,5 +1,5 @@
 #!/bin/zsh
-# Corre el baseline DMR con watchdog de memoria; siempre descarga el modelo al final.
+# Runs the DMR baseline under a memory watchdog; always unloads the model at the end.
 cd "$(dirname "$0")/.."
 MODEL=${MODEL:-ai/qwen3.5:4b-iq4_XS}; OUT=${OUT:-dmr4b-authored144.jsonl}; RSS_MAX_MB=${RSS_MAX_MB:-6656}
 docker model configure --context-size 8192 $MODEL -- --cache-ram 0 >/dev/null 2>&1

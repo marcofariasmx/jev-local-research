@@ -1,4 +1,4 @@
-"""Baseline: mismo prompt de SemIf, leído vía logprobs del primer token en DMR (OpenAI-compatible)."""
+"""Baseline: same SemIf prompt, read via first-token logprobs on DMR (OpenAI-compatible)."""
 
 import json
 import math
@@ -33,7 +33,7 @@ def score(row):
     ms = (time.perf_counter() - t0) * 1000
     top = resp["choices"][0]["logprobs"]["content"][0]["top_logprobs"]
     letters = LETTERS[: len(row["options"])]
-    # Logprob por letra; si no aparece en el top-20 queda en -inf (prob 0).
+    # Logprob per letter; if missing from the top-20 it stays at -inf (prob 0).
     lp = {l: -math.inf for l in letters}
     for t in top:
         tok = t["token"].strip()
@@ -67,16 +67,16 @@ def free_pct():
 
 
 def guard(swap0):
-    # Sin reintentos: cualquier señal de presión de memoria aborta.
+    # No retries: any sign of memory pressure aborts.
     swap, rss, free = swap_used_mb(), server_rss_gb(), free_pct()
     if swap - swap0 > SWAP_GROWTH_MB or rss > SERVER_MAX_GB or free < MIN_FREE_PCT:
-        raise SystemExit(f"ABORT memoria: swap +{swap - swap0:.0f} MB, llama-server {rss:.1f} GB, libre {free}%")
+        raise SystemExit(f"ABORT memory: swap +{swap - swap0:.0f} MB, llama-server {rss:.1f} GB, free {free}%")
     return swap, rss, free
 
 
 rows = [json.loads(l) for l in open(INPUT)]
 swap0 = swap_used_mb()
-# Reanuda: salta ids ya escritos.
+# Resume: skip ids already written.
 try:
     done = {json.loads(l)["id"] for l in open(OUTPUT)}
 except FileNotFoundError:
@@ -91,4 +91,4 @@ with open(OUTPUT, "a") as out:
         out.write(json.dumps(res) + "\n")
         out.flush()
         swap, rss, free = guard(swap0)
-        print(f"{i + 1}/{len(rows)} {res['ms']:.0f} ms | server {rss:.1f} GB, swap +{swap - swap0:.0f} MB, libre {free}%", file=sys.stderr, flush=True)
+        print(f"{i + 1}/{len(rows)} {res['ms']:.0f} ms | server {rss:.1f} GB, swap +{swap - swap0:.0f} MB, free {free}%", file=sys.stderr, flush=True)

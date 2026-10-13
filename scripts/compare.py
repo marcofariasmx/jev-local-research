@@ -1,4 +1,4 @@
-"""Compara SemIf vs baseline DMR sobre authored144: accuracy, balanced acc, NLL, Brier, ECE, latencia."""
+"""Compares all systems on authored144: accuracy, balanced acc, NLL, Brier, ECE, latency."""
 
 import json
 import os
@@ -29,7 +29,7 @@ def metrics(preds):
         conf.append(p[k])
         lat.append(ms)
         per_class.setdefault(y, []).append(k == y)
-    # ECE con 10 bins sobre la confianza del argmax.
+    # ECE with 10 bins over argmax confidence.
     ece = 0.0
     for b in range(10):
         idx = [j for j, c in enumerate(conf) if b / 10 < c <= (b + 1) / 10 or (b == 0 and c == 0)]

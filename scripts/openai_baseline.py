@@ -1,4 +1,4 @@
-"""Baseline OpenAI: mismo prompt de SemIf, confianza = logprob del primer token (solo top-1)."""
+"""OpenAI baseline: same SemIf prompt, confidence = first-token logprob (top-1 only)."""
 
 import json
 import math
@@ -37,7 +37,7 @@ def score(row):
     tok = first["token"].strip()
     n = len(letters)
     if tok in letters:
-        # OpenAI solo da el top-1: la masa restante se reparte igual entre las otras opciones.
+        # OpenAI only returns top-1: the remaining mass is split evenly across the other options.
         p = math.exp(first["logprob"])
         probs = [p if l == tok else (1 - p) / (n - 1) for l in letters]
     else:

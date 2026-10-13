@@ -1,4 +1,4 @@
-"""Qué modelos devuelven logprobs, probado directo contra OpenAI y Gemini."""
+"""Which models return logprobs, tested directly against OpenAI and Gemini."""
 import json, urllib.error, urllib.request
 import os
 OA, GG = os.environ["OPENAI_API_KEY"], os.environ["GEMINI_API_KEY"]
@@ -13,7 +13,7 @@ def post(url, body, h):
 def show(name, s, r, f):
     if s != 200: print(f"[{name}] HTTP {s}: {r}"); return
     try: v = f(r)
-    except Exception as e: v = f"(sin logprobs: {type(e).__name__})"
+    except Exception as e: v = f"(no logprobs: {type(e).__name__})"
     print(f"[{name}] OK | {json.dumps(v)[:200]}")
 
 oh = {"Authorization": f"Bearer {OA}"}

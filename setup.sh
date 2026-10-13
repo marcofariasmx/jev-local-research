@@ -1,5 +1,5 @@
 #!/bin/zsh
-# Clona SemIf en el commit evaluado e instala su venv (Python 3.12; 3.14 falla con numpy 2.2.6).
+# Clones SemIf at the evaluated commit and installs its venv (Python 3.12; 3.14 fails on numpy 2.2.6).
 set -e
 cd "$(dirname "$0")"
 [ -d semif ] || git clone https://github.com/TheoLeeCJ/SemIf.git semif
